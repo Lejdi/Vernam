@@ -2,7 +2,7 @@ import sounddevice as sd
 import base64
 
 inputfilename="algebra.pdf"
-decodedfilename="d"
+decodedfilename="decoded_algebra.pdf"
 
 def safe(data,name):
     file = open(name, "wb+")
@@ -21,7 +21,6 @@ def getMessage():
         message = base64.b64encode(pdf_file.read())
     binnary = "".join(["{:08b}".format(x) for x in message])
     return binnary
-
 
 def getKey(recSize):
     recSize /= 3
@@ -49,13 +48,20 @@ coded = stringXOR(message, key)
 
 with open("encrypted_file", "w") as coded_file:
     coded_file.write(coded)
+
+with open("key_file", "w") as coded_file:
+    coded_file.write(key)
     
 coded=""
+key=""
 
 with open("encrypted_file", "r") as coded_file:
     coded=coded_file.read()
+
+with open("key_file", "r") as key_file:
+    key=key_file.read()
         
 decoded = stringXOR(coded, key)
 
 decoded_bytes = int(decoded, 2).to_bytes((len(decoded) // 8), byteorder='big')
-safe(decoded_bytes,"decoded_algebra.pdf")
+safe(decoded_bytes,decodedfilename)
